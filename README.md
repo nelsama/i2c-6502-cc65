@@ -3,9 +3,11 @@
 ## Descripción
 Librería para comunicación I2C compatible con cc65. Utiliza el controlador I2C implementado en FPGA (OpenCores I2C Master) en modo **polling** (sin interrupciones).
 
+**Implementación optimizada en ensamblador 6502.**
+
 ## Archivos
-- `i2c.h` - Definiciones y prototipos
-- `i2c.c` - Implementación (polling)
+- `i2c.h` - Definiciones y prototipos (C header)
+- `i2c.s` - Implementación en ensamblador 6502
 - `i2c_vectors.s` - Vectores de interrupción (para compatibilidad)
 
 ## Configuración de Hardware
@@ -100,66 +102,8 @@ void main(void) {
 3. `i2c_read_byte(1)` envía ACK (para continuar leyendo más bytes)
 4. La librería usa polling, espera activa hasta completar cada operación
 
-## Compilación
-
-### Compilar la librería
-
-```bash
-# Compilar i2c.c a objeto
-cl65 -t none -O --cpu 65c02 -c i2c.c -o i2c.o
-
-# O usando ca65 desde ensamblador pre-compilado
-ca65 --cpu 65c02 i2c.s -o i2c.o
-```
-
-### Integración en Makefile
-
-```makefile
-# Directorios
-LIBS_DIR = libs
-I2C_DIR = $(LIBS_DIR)/i2c
-
-# Archivo objeto
-I2C_OBJ = $(I2C_DIR)/i2c.o
-
-# Flags del compilador
-CC = cl65
-CFLAGS = -t none -O --cpu 65c02
-
-# Regla para compilar i2c
-$(I2C_DIR)/i2c.o: $(I2C_DIR)/i2c.c $(I2C_DIR)/i2c.h
-	$(CC) $(CFLAGS) -c $< -o $@
-
-# Linkear con tu programa
-mi_programa.bin: main.o $(I2C_OBJ) vectors.o
-	ld65 -C config/fpga.cfg -o $@ $^
-```
-
-### Estructura de proyecto recomendada
-
-```
-mi_proyecto/
-├── libs/
-│   └── i2c/
-│       ├── i2c.c
-│       └── i2c.h
-├── src/
-│   └── main.c
-├── config/
-│   └── fpga.cfg
-└── makefile
-```
-
-### Include en tu código
-
-```c
-// Desde src/main.c
-#include "../libs/i2c/i2c.h"
-```
-
 ## Compatibilidad
-
-- ✅ cc65 compiler
-- ✅ C89 estándar
+- ✅ cc65 compiler (ca65 assembler)
+- ✅ Header C compatible con C89
 - ✅ Controlador OpenCores I2C Master
-- ✅ 6502/65C02
+- ✅ 6502 (no usa instrucciones 65C02)
