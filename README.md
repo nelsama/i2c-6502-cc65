@@ -107,3 +107,9 @@ void main(void) {
 - ✅ Header C compatible con C89
 - ✅ Controlador OpenCores I2C Master
 - ✅ 6502 (no usa instrucciones 65C02)
+
+## Licencia
+
+Este proyecto está licenciado bajo los términos de la Licencia MIT. Para más información, consulta el archivo [LICENSE](./LICENSE).
+
+Más detalles sobre la Licencia MIT: https://opensource.org/licenses/MIT
